@@ -28,9 +28,25 @@ def draw_polygons(polygons, screen, color):
 #        theta = math.degrees(math.acos(n))
 #        if math.fabs(theta) < 90:
         if norm[2] > 0:
+            corners = [polygons[i],polygons[i+1],polygons[i+2]]
+            top = max(corners,key=lambda x: x[1])
+            bot = min(corners,key=lambda x: x[1])
+            corners.remove(top)
+            corners.remove(bot)
+            mid = corners.pop(0)
+            x0 = x1 = bot[0]
+            y = bot[1]
+            diff0 = (top[0]-bot[0])/(top[1]-top[0])
+            diff1 = (mid[0]-bot[0])/(mid[1]-top[0])
+            while (y; y < top[1]+1; y+=1):
+                x0 +=
+                if ()
+
+
             draw_line(polygons[i][0], polygons[i][1], polygons[i+1][0], polygons[i+1][1],screen,color)
             draw_line(polygons[i+1][0], polygons[i+1][1], polygons[i+2][0], polygons[i+2][1],screen,color)
             draw_line(polygons[i+2][0], polygons[i+2][1], polygons[i][0], polygons[i][1],screen,color)
+
 
 
 def draw_line( x0, y0, x1, y1, screen, color ):
