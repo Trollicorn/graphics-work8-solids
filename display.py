@@ -1,4 +1,5 @@
 from subprocess import Popen, PIPE
+from matrix import new_matrix
 from os import remove
 
 #constants
@@ -20,15 +21,26 @@ def new_screen( width = XRES, height = YRES ):
             screen[y].append( DEFAULT_COLOR[:] )
     return screen
 
-def plot( screen, color, x, y ):
+def new_zbuffer( width = XRES, height = YRES ):
+    return new_matrix(width,height,float("-inf"))
+
+def plot( screen, zbuffer, color, x, y, z ):
     newy = YRES - 1 - int(y)
     if ( x >= 0 and x < XRES and newy >= 0 and newy < YRES ):
-        screen[newy][int(x)] = color[:]
+        if z > zbuffer[newy][int(x)]:
+            zbuffer[newy][int(x)] = z
+            screen[newy][int(x)] = color[:]
 
 def clear_screen( screen ):
     for y in range( len(screen) ):
         for x in range( len(screen[y]) ):
             screen[y][x] = DEFAULT_COLOR[:]
+
+def clear_zbuffer(zbuffer):
+    for y in range( len(zbuffer) ):
+        for x in range( len(zbuffer[y]) ):
+            zbuffer[y][x] = float("-inf")
+
 
 def save_ppm( screen, fname ):
     f = open( fname, 'w' )
@@ -54,7 +66,7 @@ def save_extension( screen, fname ):
 def display( screen ):
     ppm_name = 'pic.ppm'
     save_ppm( screen, ppm_name )
-    p = Popen( ['imdisplay.exe', ppm_name], stdin=PIPE, stdout = PIPE )
-#    p = Popen( ['display', ppm_name], stdin=PIPE, stdout = PIPE )
+#    p = Popen( ['imdisplay.exe', ppm_name], stdin=PIPE, stdout = PIPE )
+    p = Popen( ['display', ppm_name], stdin=PIPE, stdout = PIPE )
     p.communicate()
     remove(ppm_name)

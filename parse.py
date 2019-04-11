@@ -14,7 +14,7 @@ def argify(line):
             pass
     return args
 
-def parse(fname, edge, polygon, csystems, screen, color):
+def parse(fname, edge, polygon, csystems, screen, zbuffer, color):
     transform = {
         "scale": dilate,
         "move": translate,
@@ -49,14 +49,14 @@ def parse(fname, edge, polygon, csystems, screen, color):
             args = argify(args)
             shape[line](edge,args)
             matrix_mult(csystems[-1],edge)
-            draw_lines(edge,screen,color)
+            draw_lines(edge,screen,zbuffer,color)
             edge = []
         elif line in solid:
             args = f.next()
             args = argify(args)
             solid[line](polygon,args)
             matrix_mult(csystems[-1],polygon)
-            draw_polygons(polygon,screen,color)
+            draw_polygons(polygon,screen,zbuffer,color)
             polygon = []
         #elif line == "apply":
         #    matrix_mult(orders,edge)
@@ -78,16 +78,17 @@ def parse(fname, edge, polygon, csystems, screen, color):
             name = name[:len(name)-1]
             save_extension(screen,name)
         elif line == "display":
-    #        clear_screen(screen)
-    #        draw_lines(edge,screen,color)
-    #        draw_polygons(polygon,screen,color)
+        #    clear_screen(screen)
+        #    zbuf = new_zbuffer
+        #    draw_lines(edge,screen,color)
+        #    draw_polygons(polygon,screen,color)
 #            print_matrix(edge)
             display(screen)
-    #    elif line == "clear":
-    #        screen = new_screen()
-    #        zbuf = new_matrix(500,500,float("-inf"))
+        elif line == "clear":
+            clear_screen(screen)
+            clear_zbuffer(zbuffer)
         #    edge = []
         #    polygon = []
-    #    else:
-    #        print line
+        else:
+            print line
     f.close()
