@@ -83,7 +83,9 @@ def parse(fname, edge, polygon, csystems, screen, color):
     #        draw_polygons(polygon,screen,color)
 #            print_matrix(edge)
             display(screen)
-        #elif line == "clear":
+    #    elif line == "clear":
+    #        screen = new_screen()
+    #        zbuf = new_matrix(500,500,float("-inf"))
         #    edge = []
         #    polygon = []
     #    else:

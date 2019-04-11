@@ -1,5 +1,6 @@
 from display import *
 from matrix import *
+import random
 
 def draw_lines( matrix, screen, color ):
     for i in range(0,len(matrix)-1,2):
@@ -28,26 +29,47 @@ def draw_polygons(polygons, screen, color):
 #        theta = math.degrees(math.acos(n))
 #        if math.fabs(theta) < 90:
         if norm[2] > 0:
-            corners = [polygons[i],polygons[i+1],polygons[i+2]]
-            top = max(corners,key=lambda x: x[1])
-            bot = min(corners,key=lambda x: x[1])
-            corners.remove(top)
-            corners.remove(bot)
-            mid = corners.pop(0)
-            x0 = x1 = bot[0]
-            y = bot[1]
-            diff0 = (top[0]-bot[0])/(top[1]-top[0])
-            diff1 = (mid[0]-bot[0])/(mid[1]-top[0])
-            while (y; y < top[1]+1; y+=1):
-                x0 +=
-                if ()
+        #    print polygons[i]
+        #    print polygons[i+1]
+        #    print polygons[i+2]
+        #    print "good"
+            scanline(polygons[i],polygons[i+1],polygons[i+2],screen,[random.randint(0,255),random.randint(0,255),random.randint(0,255)])
+            draw_line(polygons[i][0], polygons[i][1], polygons[i+1][0], polygons[i+1][1],screen,[0,0,255])
+            draw_line(polygons[i+1][0], polygons[i+1][1], polygons[i+2][0], polygons[i+2][1],screen,[0,0,255])
+            draw_line(polygons[i+2][0], polygons[i+2][1], polygons[i][0], polygons[i][1],screen,[0,0,255])
 
-
-            draw_line(polygons[i][0], polygons[i][1], polygons[i+1][0], polygons[i+1][1],screen,color)
-            draw_line(polygons[i+1][0], polygons[i+1][1], polygons[i+2][0], polygons[i+2][1],screen,color)
-            draw_line(polygons[i+2][0], polygons[i+2][1], polygons[i][0], polygons[i][1],screen,color)
-
-
+def scanline(c0,c1,c2,screen,color):
+    corners = [c0,c1,c2]
+    top = max(corners,key=lambda x: x[1])
+    bot = min(corners,key=lambda x: x[1])
+    corners.remove(top)
+    corners.remove(bot)
+    mid = corners.pop(0)
+    Bx = x0 = x1 = bot[0]
+    By = int(bot[1])
+    Tx = top[0]
+    Ty = int(top[1])
+    Mx = mid[0]
+    My = int(mid[1])
+    diff0 = (Tx-Bx)/(Ty-By)
+    if My != By:
+        diff1 = (Mx-Bx)/(My-By)
+#        print "Mx-Bx"
+    else:
+        diff1 = (Tx-Mx)/(Ty-My)
+        x1 = Mx
+#        print "Tx-Mx"
+#    print [Bx,By]
+#    print [Mx,My]
+#    print [Tx,Ty]
+#    print diff0
+#    print diff1
+    for y in range (By,Ty):
+        draw_line(x0,y,x1,y,screen,color)
+        x0 += diff0
+        x1 += diff1
+        if y == My and Ty != My:
+            diff1 = (Tx-Mx)/(Ty-My)
 
 def draw_line( x0, y0, x1, y1, screen, color ):
 

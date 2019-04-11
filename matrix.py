@@ -65,12 +65,12 @@ def matrix_mult( m1, m2 ):
             #    print("")
 
 
-def new_matrix(rows = 4, cols = 4):
+def new_matrix(rows = 4, cols = 4, n = 0):
     m = []
     for c in range( cols ):
         m.append( [] )
         for r in range( rows ):
-            m[c].append( 0 )
+            m[c].append( n )
     return m
 
 def duplicate(m): #duplicate matrix
