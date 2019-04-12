@@ -14,4 +14,4 @@ ident(transform)
 csystems = [transform]
 zbuf = new_zbuffer()
 
-parse("script2",edges,polygons,csystems,screen,zbuf,color)
+parse("bript",edges,polygons,csystems,screen,zbuf,color)

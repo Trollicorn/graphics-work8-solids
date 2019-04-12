@@ -2,7 +2,7 @@ from display import *
 from matrix import *
 import random
 
-def draw_lines( matrix, screen, color ):
+def draw_lines( matrix, screen, zbuffer,color ):
     for i in range(0,len(matrix)-1,2):
         #addition
         draw_line(matrix[i][0],matrix[i][1],matrix[i][2],matrix[i+1][0],matrix[i+1][1],matrix[i+1][2],screen,zbuffer,color)
@@ -22,6 +22,9 @@ def add_poly(polygon,x0,y0,z0,x1,y1,z1,x2,y2,z2):
 
 def draw_polygons(polygons, screen, zbuffer,color):
     #print(polygons)
+    colors = [[255,0,0],[255,255,0],[0,255,0],[0,255,255],[0,0,255],[255,0,255]]
+    clrs = len(colors)
+    c = 0
     for i in range(0,len(polygons)-1,3):
         norm = surf(polygons,i)
 #        view = [0,0,1]
@@ -33,7 +36,9 @@ def draw_polygons(polygons, screen, zbuffer,color):
         #    print polygons[i+1]
         #    print polygons[i+2]
         #    print "good"
-            scanline(polygons[i],polygons[i+1],polygons[i+2],screen,zbuffer,[random.randint(0,255),random.randint(0,255),random.randint(0,255)])
+            color = colors[c%clrs]
+            c += 1
+            scanline(polygons[i],polygons[i+1],polygons[i+2],screen,zbuffer,color)
             draw_line(polygons[i][0],polygons[i][1],polygons[i][2],polygons[i+1][0],polygons[i+1][1],polygons[i+1][2],screen,zbuffer,[0,0,255])
             draw_line(polygons[i+1][0],polygons[i+1][1],polygons[i+1][2],polygons[i+2][0],polygons[i+2][1],polygons[i+2][2],screen,zbuffer,[0,0,255])
             draw_line(polygons[i+2][0],polygons[i+2][1],polygons[i+2][2],polygons[i][0],polygons[i][1],polygons[i][2],screen,zbuffer,[0,0,255])
@@ -46,17 +51,19 @@ def scanline(c0,c1,c2,screen,zbuffer,color):
     corners.remove(bot)
     mid = corners.pop(0)
     Bx = x0 = x1 = bot[0]
-    By = int(bot[1])
+    By = bot[1]
     Bz = z0 = z1 = bot[2]
     Tx = top[0]
-    Ty = int(top[1])
+    Ty = top[1]
     Tz = top[2]
     Mx = mid[0]
-    My = int(mid[1])
+    My = mid[1]
     Mz = mid[3]
+    if int(Ty) == int(By):
+        return
     diffx0 = (Tx-Bx)/(Ty-By)
     diffz0 = (Tz-Bz)/(Ty-By)
-    if My != By:
+    if int(My) != int(By):
         diffx1 = (Mx-Bx)/(My-By)
         diffz1 = (Mz-Bz)/(My-By)
 #        print "Mx-Bx"
@@ -71,9 +78,9 @@ def scanline(c0,c1,c2,screen,zbuffer,color):
 #    print [Tx,Ty]
 #    print diff0
 #    print diff1
-    for y in range (By,Ty):
+    for y in range (int(By),int(Ty)):
         draw_line(x0,y,z0,x1,y,z1,screen,zbuffer,color)
-        if y == My and Ty != My:
+        if y == int(My) and int(Ty) != int(My):
             diffx1 = (Tx-Mx)/(Ty-My)
             diffz1 = (Tz-Mz)/(Ty-My)
         x0 += diffx0
