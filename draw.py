@@ -39,9 +39,9 @@ def draw_polygons(polygons, screen, zbuffer,color):
             color = colors[c%clrs]
             c += 1
             scanline(polygons[i],polygons[i+1],polygons[i+2],screen,zbuffer,color)
-            draw_line(polygons[i][0],polygons[i][1],polygons[i][2],polygons[i+1][0],polygons[i+1][1],polygons[i+1][2],screen,zbuffer,[0,0,255])
-            draw_line(polygons[i+1][0],polygons[i+1][1],polygons[i+1][2],polygons[i+2][0],polygons[i+2][1],polygons[i+2][2],screen,zbuffer,[0,0,255])
-            draw_line(polygons[i+2][0],polygons[i+2][1],polygons[i+2][2],polygons[i][0],polygons[i][1],polygons[i][2],screen,zbuffer,[0,0,255])
+            draw_line(polygons[i][0],polygons[i][1],polygons[i][2],polygons[i+1][0],polygons[i+1][1],polygons[i+1][2],screen,zbuffer,[0,0,0])
+            draw_line(polygons[i+1][0],polygons[i+1][1],polygons[i+1][2],polygons[i+2][0],polygons[i+2][1],polygons[i+2][2],screen,zbuffer,[0,0,0])
+            draw_line(polygons[i+2][0],polygons[i+2][1],polygons[i+2][2],polygons[i][0],polygons[i][1],polygons[i][2],screen,zbuffer,[0,0,0])
 
 def scanline(c0,c1,c2,screen,zbuffer,color):
     corners = [c0,c1,c2]
@@ -58,18 +58,24 @@ def scanline(c0,c1,c2,screen,zbuffer,color):
     Tz = top[2]
     Mx = mid[0]
     My = mid[1]
-    Mz = mid[3]
+    Mz = mid[2]
+
     if int(Ty) == int(By):
+        print ("triangle!!!")
+        print ([Bx,By,Bz])
+        print ([Mx,My,Mz])
+        print ([Tx,Ty,Tz])
         return
-    diffx0 = (Tx-Bx)/(Ty-By)
-    diffz0 = (Tz-Bz)/(Ty-By)
+
+    diffx0 = (Tx-Bx)/1.0/(Ty-By)
+    diffz0 = (Tz-Bz)/1.0/(Ty-By)
     if int(My) != int(By):
-        diffx1 = (Mx-Bx)/(My-By)
-        diffz1 = (Mz-Bz)/(My-By)
+        diffx1 = (Mx-Bx)/1.0/(My-By)
+        diffz1 = (Mz-Bz)/1.0/(My-By)
 #        print "Mx-Bx"
     else:
-        diffx1 = (Tx-Mx)/(Ty-My)
-        diffz1 = (Tz-Mz)/(Ty-My)
+        diffx1 = (Tx-Mx)/1.0/(Ty-My)
+        diffz1 = (Tz-Mz)/1.0/(Ty-My)
         x1 = Mx
         z1 = Mz
 #        print "Tx-Mx"
@@ -78,11 +84,11 @@ def scanline(c0,c1,c2,screen,zbuffer,color):
 #    print [Tx,Ty]
 #    print diff0
 #    print diff1
-    for y in range (int(By),int(Ty)):
+    for y in range (int(By),int(Ty)+1):
         draw_line(x0,y,z0,x1,y,z1,screen,zbuffer,color)
         if y == int(My) and int(Ty) != int(My):
-            diffx1 = (Tx-Mx)/(Ty-My)
-            diffz1 = (Tz-Mz)/(Ty-My)
+            diffx1 = (Tx-Mx)/1.0/(Ty-My)
+            diffz1 = (Tz-Mz)/1.0/(Ty-My)
         x0 += diffx0
         z0 += diffz0
         x1 += diffx1
@@ -94,16 +100,21 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
     if x0 > x1:
         xt = x0
         yt = y0
+        zt = z0
         x0 = x1
         y0 = y1
+        z0 = z1
         x1 = xt
         y1 = yt
+        z1 = zt
     x = x0
     y = y0
+    z = z0
     A = 2 * (y1 - y0)
     B = -2 * (x1 - x0)
     wide = False
     tall = False
+    dz = (z1-z0)/(x1-x0+1)
     if ( abs(x1-x0) >= abs(y1 - y0) ): #octants 1/8
         wide = True
         loop_start = x
@@ -138,7 +149,8 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
             loop_start = y1
             loop_end = y
     while ( loop_start < loop_end ):
-        plot( screen, zbuffer, color, x, y, 0 )
+        plot( screen, zbuffer, color, x, y, z )
+        z += dz
         if ( (wide and ((A > 0 and d > 0) or (A < 0 and d < 0))) or
              (tall and ((A > 0 and d < 0) or (A < 0 and d > 0 )))):
             x+= dx_northeast
@@ -149,4 +161,4 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
             y+= dy_east
             d+= d_east
         loop_start+= 1
-    plot( screen, zbuffer, color, x, y, 0 )
+    plot( screen, zbuffer, color, x, y, z )

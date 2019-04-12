@@ -39,20 +39,20 @@ def parse(fname, edge, polygon, csystems, screen, zbuffer, color):
         if line in transform:
             #print("[" + line + "]")
             #print_matrix(csystems[-1])
-            args = f.next()
+            args = next(f)
             #print(args)
             args = argify(args)
             transform[line](csystems[-1],args)
 
         elif line in shape:
-            args = f.next()
+            args = next(f)
             args = argify(args)
             shape[line](edge,args)
             matrix_mult(csystems[-1],edge)
             draw_lines(edge,screen,zbuffer,color)
             edge = []
         elif line in solid:
-            args = f.next()
+            args = next(f)
             args = argify(args)
             solid[line](polygon,args)
             matrix_mult(csystems[-1],polygon)
@@ -74,7 +74,7 @@ def parse(fname, edge, polygon, csystems, screen, zbuffer, color):
 
         elif line == "save":
     #        print_matrix(edge)
-            name = f.next()
+            name = next(f)
             name = name[:len(name)-1]
             save_extension(screen,name)
         elif line == "display":
@@ -89,6 +89,6 @@ def parse(fname, edge, polygon, csystems, screen, zbuffer, color):
             clear_zbuffer(zbuffer)
         #    edge = []
         #    polygon = []
-        else:
-            print line
+    #    else:
+    #        print line
     f.close()
