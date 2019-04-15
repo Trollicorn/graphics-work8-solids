@@ -59,40 +59,43 @@ def scanline(c0,c1,c2,screen,zbuffer,color):
     Mx = mid[0]
     My = mid[1]
     Mz = mid[2]
+    switch = False
     if int(Ty) == int(By):
-        print ("triangle!!!")
-        print ([Bx,By,Bz])
-        print ([Mx,My,Mz])
-        print ([Tx,Ty,Tz])
-        return
-    diffx0 = (Tx-Bx)/1.0/(Ty-By)
-    diffz0 = (Tz-Bz)/1.0/(Ty-By)
-    if int(My) != int(By):
-        diffx1 = (Mx-Bx)/1.0/(My-By)
-        diffz1 = (Mz-Bz)/1.0/(My-By)
-#        print "Mx-Bx"
+        dx0 = 0
+        dz0 = 0
     else:
-        diffx1 = (Tx-Mx)/1.0/(Ty-My)
-        diffz1 = (Tz-Mz)/1.0/(Ty-My)
-        x1 = Mx
-        z1 = Mz
+        dx0 = (Tx-Bx)/1.0/(int(Ty)-int(By))
+        dz0 = (Tz-Bz)/1.0/(int(Ty)-int(By))
+    if int(My) == int(By):
+        dx1 = 0
+        dz1 = 0
+    else:
+        dx1 = (Mx-Bx)/1.0/(int(My)-int(By))
+        dz1 = (Mz-Bz)/1.0/(int(My)-int(By))
 #        print "Tx-Mx"
 #    print [Bx,By]
 #    print [Mx,My]
 #    print [Tx,Ty]
-#    print diff0
-#    print diff1
-    y = By
+#    print d0
+#    print d1
+#    y = By
 #    while y < Ty + 1:
-    for y in range (int(By),int(Ty)+1):
+    for y in range (int(By),int(Ty)):
+        if not switch and y >= int(My):
+            if int(Ty)== int(My):
+                dx1 = 0
+                dz1 = 0
+            else:
+                dx1 = (Tx-Mx)/1.0/(int(Ty)-int(My))
+                dz1 = (Tz-Mz)/1.0/(int(Ty)-int(My))
+            x1 = Mx
+            z1 = Mz
+            switch = True
         draw_line(x0,y,z0,x1,y,z1,screen,zbuffer,color)
-        if y == int(My) and int(Ty) != int(My):
-            diffx1 = (Tx-Mx)/1.0/(Ty-My)
-            diffz1 = (Tz-Mz)/1.0/(Ty-My)
-        x0 += diffx0
-        z0 += diffz0
-        x1 += diffx1
-        z1 += diffz1
+        x0 += dx0
+        z0 += dz0
+        x1 += dx1
+        z1 += dz1
 
 
 def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
