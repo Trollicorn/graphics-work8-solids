@@ -1,0 +1,131 @@
+#BODY
+push
+move
+250 250 0
+scale
+0.7 0.7 0.7
+  rotate
+  y 90
+  rotate
+  y -20
+box
+-90 100 40 180 200 80
+#NECK
+push
+move
+0 120 0
+box
+-20 20 20 40 40 40
+pop
+#RIGHT ARM
+push
+move
+-110 80 0
+rotate
+z -67.5
+box
+-20 20 20 40 120 40
+#RIGHT LOWER ARM
+push
+move
+0 -100 0
+rotate
+z -45
+box
+-20 0 20 40 100 40
+#RIGHT HAND
+push
+move
+0 -100 0
+rotate
+y 45
+box
+-20 0 20 40 40 40
+#RIGHT SABER
+push
+move
+0 -20 0
+box
+-10 10 10 20 20 60
+box
+-5 5 -50 10 10 200
+pop
+pop
+pop
+pop
+#LEFT ARM
+push
+move
+110 80 0
+rotate
+z 56.25
+box
+-20 20 20 40 120 40
+#LEFT LOWER ARM
+push
+move
+0 -100 0
+rotate
+z -30
+box
+-20 0 20 40 100 40
+#LEFT HAND
+push
+move
+0 -100 0
+  rotate
+  y -45
+rotate
+x -45
+box
+-20 0 20 40 40 40
+#LEFT SABER
+push
+move
+0 -20 0
+box
+-10 10 10 20 20 60
+box
+-5 5 -50 10 10 200
+pop
+pop
+pop
+pop
+#RIGHT LEG
+push
+move
+-60 -120 0
+  rotate
+  x -30
+box
+-20 20 20 40 115 40
+#RIGHT LOWER LEG
+push
+move
+0 -95 0
+  rotate
+  x 30
+box
+-20 0 20 40 115 40
+pop
+pop
+#LEFT LEG
+push
+move
+60 -120 0
+  rotate
+  x 30
+box
+-20 20 20 40 115 40
+#LEFT LOWER LEG
+push
+move
+0 -95 0
+  rotate
+  x 30
+box
+-20 0 20 40 115 40
+pop
+pop
+pop
+display

@@ -20,11 +20,10 @@ def add_poly(polygon,x0,y0,z0,x1,y1,z1,x2,y2,z2):
     add_point(polygon,x1,y1,z1)
     add_point(polygon,x2,y2,z2)
 
-def draw_polygons(polygons, screen, zbuffer,color):
+def draw_polygons(polygons, screen, zbuffer,colors):
     #print(polygons)
-    colors = [[255,0,0],[255,255,0],[0,255,0],[0,255,255],[0,0,255],[255,0,255]]
-    clrs = len(colors)
-    c = 0
+#    clrs = len(colors)
+#    c = 0
     for i in range(0,len(polygons)-1,3):
         norm = surf(polygons,i)
 #        view = [0,0,1]
@@ -36,8 +35,10 @@ def draw_polygons(polygons, screen, zbuffer,color):
         #    print polygons[i+1]
         #    print polygons[i+2]
         #    print "good"
-            color = colors[c%clrs]
-            c += 1
+    #        color = colors[c%clrs]
+    #        c += 1
+            color = colors[0]
+            colors.append(colors.pop(0))
             scanline(polygons[i],polygons[i+1],polygons[i+2],screen,zbuffer,color)
 #            draw_line(polygons[i][0],polygons[i][1],polygons[i][2],polygons[i+1][0],polygons[i+1][1],polygons[i+1][2],screen,zbuffer,[255,255,255])
 #            draw_line(polygons[i+1][0],polygons[i+1][1],polygons[i+1][2],polygons[i+2][0],polygons[i+2][1],polygons[i+2][2],screen,zbuffer,[255,255,255])
