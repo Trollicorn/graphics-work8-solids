@@ -33,7 +33,7 @@ def sphere(polygon,args): #[x,y,z,r]
     y = args[1]
     z = args[2]
     r = args[3]
-    n = 10
+    n = 20
     p = p_sphere(x,y,z,r,n)
     for i in range(len(p)-1):
 #        """
@@ -75,7 +75,7 @@ def torus(polygon,args): #[x,y,z,r1,r2]
     z = args[2]
     r1 = args[3] #small circles
     r2 = args[4] #big circle
-    n = 10
+    n = 20
     p = p_torus(x,y,z,r1,r2,n)
 #    print(p)
 #    print(len(p))

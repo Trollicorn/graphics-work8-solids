@@ -39,9 +39,9 @@ def draw_polygons(polygons, screen, zbuffer,color):
             color = colors[c%clrs]
             c += 1
             scanline(polygons[i],polygons[i+1],polygons[i+2],screen,zbuffer,color)
-            draw_line(polygons[i][0],polygons[i][1],polygons[i][2],polygons[i+1][0],polygons[i+1][1],polygons[i+1][2],screen,zbuffer,[0,0,0])
-            draw_line(polygons[i+1][0],polygons[i+1][1],polygons[i+1][2],polygons[i+2][0],polygons[i+2][1],polygons[i+2][2],screen,zbuffer,[0,0,0])
-            draw_line(polygons[i+2][0],polygons[i+2][1],polygons[i+2][2],polygons[i][0],polygons[i][1],polygons[i][2],screen,zbuffer,[0,0,0])
+#            draw_line(polygons[i][0],polygons[i][1],polygons[i][2],polygons[i+1][0],polygons[i+1][1],polygons[i+1][2],screen,zbuffer,[255,255,255])
+#            draw_line(polygons[i+1][0],polygons[i+1][1],polygons[i+1][2],polygons[i+2][0],polygons[i+2][1],polygons[i+2][2],screen,zbuffer,[255,255,255])
+#            draw_line(polygons[i+2][0],polygons[i+2][1],polygons[i+2][2],polygons[i][0],polygons[i][1],polygons[i][2],screen,zbuffer,[255,255,255])
 
 def scanline(c0,c1,c2,screen,zbuffer,color):
     corners = [c0,c1,c2]
@@ -59,14 +59,12 @@ def scanline(c0,c1,c2,screen,zbuffer,color):
     Mx = mid[0]
     My = mid[1]
     Mz = mid[2]
-
     if int(Ty) == int(By):
         print ("triangle!!!")
         print ([Bx,By,Bz])
         print ([Mx,My,Mz])
         print ([Tx,Ty,Tz])
         return
-
     diffx0 = (Tx-Bx)/1.0/(Ty-By)
     diffz0 = (Tz-Bz)/1.0/(Ty-By)
     if int(My) != int(By):
@@ -84,6 +82,8 @@ def scanline(c0,c1,c2,screen,zbuffer,color):
 #    print [Tx,Ty]
 #    print diff0
 #    print diff1
+    y = By
+#    while y < Ty + 1:
     for y in range (int(By),int(Ty)+1):
         draw_line(x0,y,z0,x1,y,z1,screen,zbuffer,color)
         if y == int(My) and int(Ty) != int(My):
