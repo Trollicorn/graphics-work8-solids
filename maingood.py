@@ -14,4 +14,4 @@ ident(transform)
 csystems = [transform]
 zbuf = new_zbuffer()
 
-parse("laser",edges,polygons,csystems,screen,zbuf,colors)
+parse("laser2",edges,polygons,csystems,screen,zbuf,colors)
