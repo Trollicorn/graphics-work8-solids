@@ -46,49 +46,37 @@ def draw_polygons(polygons, screen, zbuffer,colors):
 
 def scanline(c0,c1,c2,screen,zbuffer,color):
     corners = [c0,c1,c2]
-    top = max(corners,key=lambda x: x[1])
-    bot = min(corners,key=lambda x: x[1])
-    corners.remove(top)
-    corners.remove(bot)
-    mid = corners.pop(0)
+    corners.sort(key=lambda x:x[1])
+#    top = max(corners,key=lambda x: x[1])
+#    bot = min(corners,key=lambda x: x[1])
+#    corners.remove(top)
+#    corners.remove(bot)
+#    mid = corners.pop(0)
+    bot = corners[0]
+    mid = corners[1]
+    top = corners[2]
     Bx = x0 = x1 = bot[0]
-    By = bot[1]
     Bz = z0 = z1 = bot[2]
+    By = int(bot[1])
+
     Tx = top[0]
-    Ty = top[1]
     Tz = top[2]
+    Ty = int(top[1])
     Mx = mid[0]
-    My = mid[1]
     Mz = mid[2]
+    My = int(mid[1])
+    BtoT = Ty - By * 1.0 + 1
+    BtoM = My - By * 1.0 + 1
+    MtoT = Ty - My * 1.0 + 1
     switch = False
-    if int(Ty) == int(By):
-        dx0 = 0
-        dz0 = 0
-    else:
-        dx0 = (Tx-Bx)/1.0/(int(Ty)-int(By))
-        dz0 = (Tz-Bz)/1.0/(int(Ty)-int(By))
-    if int(My) == int(By):
-        dx1 = 0
-        dz1 = 0
-    else:
-        dx1 = (Mx-Bx)/1.0/(int(My)-int(By))
-        dz1 = (Mz-Bz)/1.0/(int(My)-int(By))
-#        print "Tx-Mx"
-#    print [Bx,By]
-#    print [Mx,My]
-#    print [Tx,Ty]
-#    print d0
-#    print d1
-#    y = By
-#    while y < Ty + 1:
-    for y in range (int(By),int(Ty)):
-        if not switch and y >= int(My):
-            if int(Ty)== int(My):
-                dx1 = 0
-                dz1 = 0
-            else:
-                dx1 = (Tx-Mx)/1.0/(int(Ty)-int(My))
-                dz1 = (Tz-Mz)/1.0/(int(Ty)-int(My))
+    dx0 = (Tx-Bx)/BtoT if BtoT != 0 else 0
+    dz0 = (Tz-Bz)/BtoT if BtoT != 0 else 0
+    dx1 = (Mx-Bx)/BtoM if BtoM != 0 else 0
+    dz1 = (Mz-Bz)/BtoM if BtoM != 0 else 0
+    for y in range (By,Ty+1):
+        if not switch and y >= My:
+            dx1 = (Tx-Mx)/MtoT if MtoT != 0 else 0
+            dz1 = (Tz-Mz)/MtoT if MtoT != 0 else 0
             x1 = Mx
             z1 = Mz
             switch = True
@@ -100,6 +88,7 @@ def scanline(c0,c1,c2,screen,zbuffer,color):
 
 
 def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
+
     #swap points if going right -> left
     if x0 > x1:
         xt = x0
@@ -111,6 +100,7 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
         x1 = xt
         y1 = yt
         z1 = zt
+
     x = x0
     y = y0
     z = z0
@@ -118,7 +108,7 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
     B = -2 * (x1 - x0)
     wide = False
     tall = False
-    dz = (z1-z0)/(x1-x0+1)
+
     if ( abs(x1-x0) >= abs(y1 - y0) ): #octants 1/8
         wide = True
         loop_start = x
@@ -126,6 +116,7 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
         dx_east = dx_northeast = 1
         dy_east = 0
         d_east = A
+        distance = x1 - x + 1
         if ( A > 0 ): #octant 1
             d = A + B/2
             dy_northeast = 1
@@ -138,6 +129,7 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
         tall = True
         dx_east = 0
         dx_northeast = 1
+        distance = abs(y1 - y) + 1
         if ( A > 0 ): #octant 2
             d = A/2 + B
             dy_east = dy_northeast = 1
@@ -152,9 +144,9 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
             d_east = -1 * B
             loop_start = y1
             loop_end = y
+    dz = (z1 - z0) / distance if distance != 0 else 0
     while ( loop_start < loop_end ):
         plot( screen, zbuffer, color, x, y, z )
-        z += dz
         if ( (wide and ((A > 0 and d > 0) or (A < 0 and d < 0))) or
              (tall and ((A > 0 and d < 0) or (A < 0 and d > 0 )))):
             x+= dx_northeast
@@ -164,5 +156,6 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
             x+= dx_east
             y+= dy_east
             d+= d_east
+        z+= dz
         loop_start+= 1
     plot( screen, zbuffer, color, x, y, z )
