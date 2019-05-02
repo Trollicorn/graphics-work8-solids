@@ -80,15 +80,13 @@ def scanline(c0,c1,c2,screen,zbuffer,color):
             x1 = Mx
             z1 = Mz
             switch = True
-        draw_line(x0,y,z0,x1,y,z1,screen,zbuffer,color)
+        draw_line(int(x0),y,z0,int(x1),y,z1,screen,zbuffer,color)
         x0 += dx0
         z0 += dz0
         x1 += dx1
         z1 += dz1
 
-
 def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
-
     #swap points if going right -> left
     if x0 > x1:
         xt = x0
@@ -100,7 +98,6 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
         x1 = xt
         y1 = yt
         z1 = zt
-
     x = x0
     y = y0
     z = z0
@@ -108,7 +105,6 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
     B = -2 * (x1 - x0)
     wide = False
     tall = False
-
     if ( abs(x1-x0) >= abs(y1 - y0) ): #octants 1/8
         wide = True
         loop_start = x
